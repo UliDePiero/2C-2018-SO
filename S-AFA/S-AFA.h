@@ -6,11 +6,11 @@
  */
 
 #ifndef S_AFA_H_
-#include <sockets.h>
+#define S_AFA_H_
 //Ruta del archivo de configuraciones
 #define RUTA_CONFIG "S-AFA.config"
-#define S_AFA_H_
 #define TAMMAXNOMBREALGORITMO 6
+#include <sockets.h>
 
 int operacion;
 ///---------------------ESTRUCTURA DE CONFIGURACION DE S-AFA-------------------------

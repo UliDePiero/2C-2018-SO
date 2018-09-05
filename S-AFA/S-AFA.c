@@ -4,7 +4,7 @@
  *  Created on: 31 ago. 2018
  *      Author: utnso
  */
-#include <S-AFA.h>
+#include "S-AFA.h"
 void configurar(ConfiguracionSAFA* configuracion) {
 
 	//char* cadenaAlgoritmo = malloc(TAMMAXNOMBREALGORITMO*sizeof(char)); //Necesario para OPCION C
