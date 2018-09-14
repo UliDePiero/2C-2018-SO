@@ -10,6 +10,7 @@ void configurar(ConfiguracionDAM* configuracion) {
 
 	char* campos[] = {
 					   "PUERTO",
+					   "IP_DIEGO",
 					   "PUERTO_SAFA",
 					   "PUERTO_MDJ",
 					   "PUERTO_FM9",
@@ -23,6 +24,7 @@ void configurar(ConfiguracionDAM* configuracion) {
 
 	//Relleno los campos con la info del archivo
 	configuracion->puerto = archivoConfigSacarIntDe(archivoConfig, "PUERTO");
+	strcpy(configuracion->ip_dam, archivoConfigSacarStringDe(archivoConfig, "IP_DIEGO"));
 	configuracion->puerto_safa = archivoConfigSacarIntDe(archivoConfig, "PUERTO_SAFA");
 	configuracion->puerto_mdj = archivoConfigSacarIntDe(archivoConfig, "PUERTO_MDJ");
 	configuracion->puerto_fm9 = archivoConfigSacarIntDe(archivoConfig, "PUERTO_FM9");
@@ -45,4 +47,10 @@ main()
 	conversacionComoCliente((void*) socketMDJ);
 	conversacionComoCliente((void*) socketFM9);
 
+	//servidor
+
+	int socketEscucha= levantarServidor(configuracion->ip_dam,configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
+	int	socketActivo = aceptarComunicaciones(socketEscucha);
+	conversacionComoServidor((void*) socketActivo);
+	//recibirUnMensaje(socketActivo);
 }
