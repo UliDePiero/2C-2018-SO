@@ -10,7 +10,7 @@
 4. metricas
 */
 #include "S-AFA.h"
-main(){
+/*main(){
 	do{
 
 				printf("\n\n1:Ejecutar\n2:Status\n3:Finalizar\n4:Metricas\n5:Salir\n");
@@ -29,4 +29,4 @@ main(){
 				                    	break;
 				}
 	}while (operacion != 8);
-}
+}*/

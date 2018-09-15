@@ -34,7 +34,12 @@ main()
 	// cliente
 	int socketSAFA = conectarAUnServidor(configuracion->ip_safa, configuracion->puerto_safa);
 	int socketDAM = conectarAUnServidor(configuracion->ip_diego, configuracion->puerto_diego);
+	enviarUnMensaje(socketSAFA);
+	conversar(&socketSAFA);
+	enviarUnMensaje(socketDAM);
+	conversar(&socketDAM);
+	/*
 	conversacionComoCliente((void*) socketSAFA);
 	conversacionComoCliente((void*) socketDAM);
-
+	*/
 }

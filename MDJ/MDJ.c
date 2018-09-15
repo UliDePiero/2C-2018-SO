@@ -31,8 +31,10 @@ main()
 	//servidor
 
 	int socketEscucha= levantarServidor(configuracion->ip_mdj,configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
-	int	socketActivo = aceptarPlanificador(socketEscucha);
-	conversacionComoServidor((void*) socketActivo);
+	int	socketActivo = aceptarComunicaciones(socketEscucha);
+	//conversacionComoServidor(&socketActivo);
+	recibirUnMensaje(socketActivo);
+	conversar(&socketActivo);
 	//recibirUnMensaje(socketActivo);
 }
 

@@ -3,7 +3,6 @@
 	<name>BibliotecaSockets</name>
 	<comment></comment>
 	<projects>
-		<project>parsi</project>
 		<project>so-commons-library</project>
 	</projects>
 	<buildSpec>

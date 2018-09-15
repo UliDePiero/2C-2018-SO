@@ -43,14 +43,22 @@ main()
 	int socketSAFA = conectarAUnServidor(configuracion->ip_safa, configuracion->puerto_safa);
 	int socketMDJ = conectarAUnServidor(configuracion->ip_mdj, configuracion->puerto_mdj);
 	int socketFM9 = conectarAUnServidor(configuracion->ip_fm9, configuracion->puerto_fm9);
+	enviarUnMensaje(socketSAFA);
+	conversar(&socketSAFA);
+	enviarUnMensaje(socketMDJ);
+	conversar(&socketMDJ);
+	enviarUnMensaje(socketFM9);
+	conversar(&socketFM9);
+	/*
 	conversacionComoCliente((void*) socketSAFA);
 	conversacionComoCliente((void*) socketMDJ);
 	conversacionComoCliente((void*) socketFM9);
-
+	*/
 	//servidor
 
 	int socketEscucha= levantarServidor(configuracion->ip_dam,configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
 	int	socketActivo = aceptarComunicaciones(socketEscucha);
-	conversacionComoServidor((void*) socketActivo);
-	//recibirUnMensaje(socketActivo);
+	//conversacionComoServidor((void*) socketActivo);
+	recibirUnMensaje(socketActivo);
+	conversar(&socketActivo);
 }
