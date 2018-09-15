@@ -17,7 +17,7 @@ int operacion;
 
 //Estructura para datos del archivo de configuracion
 typedef struct {
-	int puerto;
+	char puerto[10];
 	int algoritmo;						//Se lee una cadena, pero se guarda con un entero (constante predefinida)
 	int quantum;
 	int multiprogramacion;
@@ -26,11 +26,11 @@ typedef struct {
 } ConfiguracionSAFA;
 /*
 PUERTO=8000
-ALGORITMO="RR"
+ALGORITMO=RR
 QUANTUM=2
 MULTIPROGRAMACION=3
 RETARDO_PLANIF=600
-IP_SAFA="192.168.1.2"
+IP_SAFA=192.168.1.2
 */
 //Estructura para guardar la configuracion del proceso
 ConfiguracionSAFA* configuracion;

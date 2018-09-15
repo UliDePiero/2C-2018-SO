@@ -15,7 +15,7 @@
 
 //Estructura para datos del archivo de configuracion
 typedef struct {
-	int puerto;
+	char puerto[10];
 	int modo;						//Se lee una cadena, pero se guarda con un entero (constante predefinida)
 	int tamanio;
 	int max_linea;
@@ -24,11 +24,11 @@ typedef struct {
 } ConfiguracionFM9;
 /*
 PUERTO=8000
-MODO="SEG"
+MODO=SEG
 TAMANIO=2048
 MAX_LINEA=128
 TAM_PAGINA=1024
-IP_FM9="192.168.1.4"
+IP_FM9=192.168.1.4
 */
 //Estructura para guardar la configuracion del proceso
 ConfiguracionFM9* configuracion;

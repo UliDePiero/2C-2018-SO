@@ -143,7 +143,7 @@ void crearHilo(pthread_t* hilo, void *(*funcion) (void *), void *__restrict argu
 ///FUNCIONES DE CONEXION
 
 //Guardo en una estructura conexion los datos de una conexion a cierto ip y cierto puerto
-void configurarConexion(Conexion* conexion, char* ip, int* puerto){
+void configurarConexion(Conexion* conexion, char* ip, char* puerto){
 
 	struct addrinfo hints;
 	int errorCheck;													//Para checkear que no haya error
@@ -192,7 +192,7 @@ void mostrarIPs()
 //---------------------------------------------
 
 //Configura una conexion a una ip y un puerto, crea un socket para ella y le asigna un descriptor
-int crearSocket(Conexion* conexion, char* ip, int* puerto){
+int crearSocket(Conexion* conexion, char* ip, char* puerto){
 
 	configurarConexion(conexion, ip, puerto);
 	int descriptor = socket(conexion->info->ai_family, conexion->info->ai_socktype, conexion->info->ai_protocol);
@@ -234,7 +234,7 @@ void conectarSocket(Conexion* conexion, int unSocket){
 //---------------------------------------------
 
 //Conecta a un servidor en la ip y el puerto determinados
-int conectarAUnServidor(char *ip, int *puerto){ //TERMINAR!
+int conectarAUnServidor(char *ip, char *puerto){ //TERMINAR!
 
 	Conexion conexion;
 	int socketServidor = crearSocket(&conexion, ip, puerto);
@@ -317,7 +317,7 @@ struct timeval configurarTimeout(int segundos, int microsegundos) {
 //---------------------------------------------
 
 //Levanta un servidor en la ip y el puerto determinados
-int levantarServidor(char* ip, int* puerto, int backlog) {
+int levantarServidor(char* ip, char* puerto, int backlog) {
 
 	Conexion conexion;
 	int activado = TRUE;

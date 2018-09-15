@@ -15,16 +15,16 @@
 
 //Estructura para datos del archivo de configuracion
 typedef struct {
-	int puerto_safa;
-	int puerto_diego;
+	char puerto_safa[10];
+	char puerto_diego[10];
 	int retardo;
 	char ip_safa[20];
 	char ip_diego[20];
 } ConfiguracionCPU;
 /*
-IP_SAFA="192.168.1.1"
+IP_SAFA=192.168.1.1
 PUERTO_SAFA=8000
-IP_DIEGO="192.168.1.2"
+IP_DIEGO=192.168.1.2
 PUERTO_DIEGO=8001
 RETARDO=1000
 */

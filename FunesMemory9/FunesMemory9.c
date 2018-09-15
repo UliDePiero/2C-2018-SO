@@ -20,7 +20,7 @@ void configurar(ConfiguracionFM9* configuracion) {
 	t_config* archivoConfig = archivoConfigCrear(RUTA_CONFIG, campos);
 
 	//Relleno los campos con la info del archivo
-	configuracion->puerto = archivoConfigSacarIntDe(archivoConfig, "PUERTO");
+	strcpy(configuracion->puerto, archivoConfigSacarStringDe(archivoConfig, "PUERTO"));
 
 	configuracion->modo = archivoConfigSacarIntDe(archivoConfig, "MODO"); //OPCION A
 

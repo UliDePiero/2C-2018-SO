@@ -17,7 +17,7 @@ void configurar(ConfiguracionMDJ* configuracion) {
 	t_config* archivoConfig = archivoConfigCrear(RUTA_CONFIG, campos);
 
 	//Relleno los campos con la info del archivo
-	configuracion->puerto = archivoConfigSacarIntDe(archivoConfig, "PUERTO");
+	strcpy(configuracion->puerto, archivoConfigSacarStringDe(archivoConfig, "PUERTO"));
 	strcpy(configuracion->punto_montaje, archivoConfigSacarStringDe(archivoConfig, "PUNTO_MONTAJE"));
 	configuracion->retardo = archivoConfigSacarIntDe(archivoConfig, "RETARDO");
 	strcpy(configuracion->ip_mdj, archivoConfigSacarStringDe(archivoConfig, "IP_MDJ"));

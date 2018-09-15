@@ -23,11 +23,11 @@ void configurar(ConfiguracionDAM* configuracion) {
 	t_config* archivoConfig = archivoConfigCrear(RUTA_CONFIG, campos);
 
 	//Relleno los campos con la info del archivo
-	configuracion->puerto = archivoConfigSacarIntDe(archivoConfig, "PUERTO");
+	strcpy(configuracion->puerto, archivoConfigSacarStringDe(archivoConfig, "PUERTO"));
 	strcpy(configuracion->ip_dam, archivoConfigSacarStringDe(archivoConfig, "IP_DIEGO"));
-	configuracion->puerto_safa = archivoConfigSacarIntDe(archivoConfig, "PUERTO_SAFA");
-	configuracion->puerto_mdj = archivoConfigSacarIntDe(archivoConfig, "PUERTO_MDJ");
-	configuracion->puerto_fm9 = archivoConfigSacarIntDe(archivoConfig, "PUERTO_FM9");
+	strcpy(configuracion->ip_safa, archivoConfigSacarStringDe(archivoConfig, "PUERTO_SAFA"));
+	strcpy(configuracion->ip_mdj, archivoConfigSacarStringDe(archivoConfig, "PUERTO_MDJ"));
+	strcpy(configuracion->ip_fm9, archivoConfigSacarStringDe(archivoConfig, "PUERTO_FM9"));
 	strcpy(configuracion->ip_safa, archivoConfigSacarStringDe(archivoConfig, "IP_SAFA"));
 	strcpy(configuracion->ip_mdj, archivoConfigSacarStringDe(archivoConfig, "IP_MDJ"));
 	strcpy(configuracion->ip_fm9, archivoConfigSacarStringDe(archivoConfig, "IP_FM9"));

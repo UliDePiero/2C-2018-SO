@@ -16,10 +16,10 @@
 
 //Estructura para datos del archivo de configuracion
 typedef struct {
-	int puerto;
-	int puerto_safa;
-	int puerto_mdj;
-	int puerto_fm9;
+	char puerto[10];
+	char puerto_safa[10];
+	char puerto_mdj[10];
+	char puerto_fm9[10];
 	char ip_safa[20];
 	char ip_mdj[20];
 	char ip_fm9[20];
@@ -28,12 +28,12 @@ typedef struct {
 } ConfiguracionDAM;
 /*
 PUERTO=8001
-IP_DIEGO="192.168.1.2"
-IP_SAFA="192.168.1.1"
+IP_DIEGO=192.168.1.2
+IP_SAFA=192.168.1.1
 PUERTO_SAFA=8000
-IP_MDJ="192.168.1.3"
+IP_MDJ=192.168.1.3
 PUERTO_MDJ=8002
-IP_FM9="192.168.1.4"
+IP_FM9=192.168.1.4
 PUERTO_FM9=8003
 TRANSFER_SIZE=16
 */

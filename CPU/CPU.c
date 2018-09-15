@@ -19,8 +19,8 @@ void configurar(ConfiguracionCPU* configuracion) {
 	t_config* archivoConfig = archivoConfigCrear(RUTA_CONFIG, campos);
 
 	//Relleno los campos con la info del archivo
-	configuracion->puerto_safa = archivoConfigSacarIntDe(archivoConfig, "PUERTO_SAFA");
-	configuracion->puerto_diego = archivoConfigSacarIntDe(archivoConfig, "PUERTO_DIEGO");
+	strcpy(configuracion->puerto_safa, archivoConfigSacarStringDe(archivoConfig, "PUERTO_SAFA"));
+	strcpy(configuracion->puerto_diego, archivoConfigSacarStringDe(archivoConfig, "PUERTO_DIEGO"));
 	configuracion->retardo = archivoConfigSacarIntDe(archivoConfig, "RETARDO");
 	strcpy(configuracion->ip_safa, archivoConfigSacarStringDe(archivoConfig, "IP_SAFA"));
 	strcpy(configuracion->ip_diego, archivoConfigSacarStringDe(archivoConfig, "IP_DAM"));

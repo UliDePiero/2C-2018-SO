@@ -20,7 +20,7 @@ void configurar(ConfiguracionSAFA* configuracion) {
 	t_config* archivoConfig = archivoConfigCrear(RUTA_CONFIG, campos);
 
 	//Relleno los campos con la info del archivo
-	configuracion->puerto = archivoConfigSacarIntDe(archivoConfig, "PUERTO");
+	strcpy(configuracion->puerto, archivoConfigSacarStringDe(archivoConfig, "PUERTO"));
 
 	configuracion->algoritmo = archivoConfigSacarIntDe(archivoConfig, "ALGORITMO"); //OPCION A
 
@@ -38,6 +38,7 @@ void configurar(ConfiguracionSAFA* configuracion) {
 }
 main()
 {
+	configuracion = malloc(sizeof(ConfiguracionSAFA));
 	configurar(configuracion);
 
 	//servidor
@@ -47,4 +48,8 @@ main()
 	//conversacionComoServidor(&socketActivo);
 	recibirUnMensaje(socketActivo);
 	conversar(&socketActivo);
+
+	cerrarSocket(socketActivo);
+	cerrarSocket(socketEscucha);
+	free(configuracion);
 }

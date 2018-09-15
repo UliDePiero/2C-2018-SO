@@ -86,15 +86,15 @@ bool archivoConfigIncompleto(t_config* archivoConfig, char** campos);
 void crearHilo(pthread_t* hilo, void *(*funcion) (void *), void *__restrict argumento, char* proceso);
 
 //Funciones de conexion
-void configurarConexion(Conexion* conexion,char* ip, int* puerto);
+void configurarConexion(Conexion* conexion,char* ip, char* puerto);
 void puertoPosta(Conexion* conexion);
 void mostrarIPs();
-int crearSocket(Conexion* conexion, char* ip, int* puerto);
+int crearSocket(Conexion* conexion, char* ip, char* puerto);
 void cerrarSocket(int socket);
 
 //Funciones especificas de clientes
 void conectarSocket(Conexion* conexion, int unSocket);
-int conectarAUnServidor(char* ip, int* puerto);
+int conectarAUnServidor(char* ip, char* puerto);
 
 //Funciones especificas de servidores
 void bindearSocket(Conexion* conexion, int unSocket);
@@ -102,7 +102,7 @@ void ponerAEscuchar(int unSocket, int ClientesEnEspera);
 int aceptarComunicaciones(int socketEscucha);
 void* obtenerIPCliente(struct sockaddr* sa);
 struct timeval configurarTimeout(int segundos, int microsegundos);
-int levantarServidor(char* ip, int* puerto, int backlog);
+int levantarServidor(char* ip, char* puerto, int backlog);
 
 //Funciones de comunicacion
 void recibirMensajes(int unSocket);		//DEPRECADO
