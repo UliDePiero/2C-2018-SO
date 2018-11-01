@@ -26,6 +26,7 @@ void configurar(ConfiguracionMDJ* configuracion) {
 }
 main()
 {
+	configuracion = malloc(sizeof(ConfiguracionMDJ));
 	configurar(configuracion);
 
 	//servidor
@@ -36,5 +37,7 @@ main()
 	recibirUnMensaje(socketActivo);
 	conversar(&socketActivo);
 	//recibirUnMensaje(socketActivo);
+	cerrarSocket(socketActivo);
+	cerrarSocket(socketEscucha);
+	free(configuracion);
 }
-

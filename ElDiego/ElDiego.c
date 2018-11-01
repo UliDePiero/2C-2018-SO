@@ -37,6 +37,7 @@ void configurar(ConfiguracionDAM* configuracion) {
 }
 main()
 {
+	configuracion = malloc(sizeof(ConfiguracionDAM));
 	configurar(configuracion);
 
 	// cliente
@@ -54,6 +55,9 @@ main()
 	conversacionComoCliente((void*) socketMDJ);
 	conversacionComoCliente((void*) socketFM9);
 	*/
+	cerrarSocket(socketSAFA);
+	cerrarSocket(socketMDJ);
+	cerrarSocket(socketFM9);
 	//servidor
 
 	int socketEscucha= levantarServidor(configuracion->ip_dam,configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
@@ -61,4 +65,7 @@ main()
 	//conversacionComoServidor((void*) socketActivo);
 	recibirUnMensaje(socketActivo);
 	conversar(&socketActivo);
+	cerrarSocket(socketActivo);
+	cerrarSocket(socketEscucha);
+	free(configuracion);
 }

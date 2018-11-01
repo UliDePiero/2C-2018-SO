@@ -35,6 +35,7 @@ void configurar(ConfiguracionFM9* configuracion) {
 }
 main()
 {
+	configuracion = malloc(sizeof(ConfiguracionFM9));
 	configurar(configuracion);
 
 	//servidor
@@ -44,4 +45,7 @@ main()
 	//conversacionComoServidor(&socketActivo);
 	recibirUnMensaje(socketActivo);
 	conversar(&socketActivo);
+	cerrarSocket(socketActivo);
+	cerrarSocket(socketEscucha);
+	free(configuracion);
 }

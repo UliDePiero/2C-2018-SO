@@ -29,6 +29,7 @@ void configurar(ConfiguracionCPU* configuracion) {
 }
 main()
 {
+	configuracion = malloc(sizeof(ConfiguracionCPU));
 	configurar(configuracion);
 
 	// cliente
@@ -42,4 +43,7 @@ main()
 	conversacionComoCliente((void*) socketSAFA);
 	conversacionComoCliente((void*) socketDAM);
 	*/
+	cerrarSocket(socketSAFA);
+	cerrarSocket(socketDAM);
+	free(configuracion);
 }

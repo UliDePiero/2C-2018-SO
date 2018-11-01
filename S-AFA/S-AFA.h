@@ -17,7 +17,7 @@ int operacion;
 
 //Estructura para datos del archivo de configuracion
 typedef struct {
-	char puerto[10];
+	char puerto[20];
 	int algoritmo;						//Se lee una cadena, pero se guarda con un entero (constante predefinida)
 	int quantum;
 	int multiprogramacion;
