@@ -36,14 +36,18 @@ void configurar(ConfiguracionSAFA* configuracion) {
 
 	archivoConfigDestruir(archivoConfig);
 }
-main()
+int main()
 {
 	configuracion = malloc(sizeof(ConfiguracionSAFA));
 	configurar(configuracion);
-
+	listos = queue_create();
+	ejecucion = queue_create();
+	bloqueados = queue_create();
+	terminados = queue_create();
 	//servidor
 
-	int socketEscucha= levantarServidor(configuracion->ip_safa,configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
+	//int socketEscucha= levantarServidor(configuracion->ip_safa,configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
+	int socketEscucha= levantarServidor("127.9.5.1","7000",10); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
 	int	socketActivo = aceptarComunicaciones(socketEscucha);
 	//conversacionComoServidor(&socketActivo);
 	recibirUnMensaje(socketActivo);

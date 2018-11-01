@@ -252,6 +252,9 @@ void bindearSocket(Conexion* conexion, int unSocket){
 	int estadoDelBindeo;
 	puertoPosta(conexion);
 	if ((estadoDelBindeo = bind(unSocket, conexion->info->ai_addr, conexion->info->ai_addrlen)) != 0){
+		printf("flags %d ,familia %d ,protocolo %d ,tipo socket %d,longitud %d  ", conexion->info->ai_flags, conexion->info->ai_family, conexion->info->ai_protocol,conexion->info->ai_socktype,conexion->info->ai_addrlen);
+		for(int a=0; a<14; a++) printf("%d-", *conexion->info->ai_addr->sa_data );
+		perror("Error: ");
 		terminarConError(estadoDelBindeo, "No pudo asociarse el socket a la conexion \n", NULL);
 	}
 	printf("ESTADO: Socket de descriptor %d asociado a la conexion en la ip %s en el puerto %s \n", unSocket, conexion->ip, conexion->port);
@@ -323,7 +326,6 @@ int levantarServidor(char* ip, char* puerto, int backlog) {
 	int activado = TRUE;
 	int socketEscucha = crearSocket(&conexion, ip, puerto);
 	conexion.tamanioAddress = sizeof(conexion.address);
-	printf("\nsocketEscucha:%d\n",socketEscucha);
 	setsockopt(socketEscucha, SOL_SOCKET, SO_REUSEADDR, &activado, sizeof(activado));//mientras este en etapa de pruebas
 	bindearSocket(&conexion, socketEscucha);
 	freeaddrinfo(conexion.info);
