@@ -1,5 +1,12 @@
-#ifndef REDISTINTO_SOCKETS_H_
-#define REDISTINTO_SOCKETS_H_
+/*
+ * conexionSockets.h
+ *
+ *  Created on: 1 nov. 2018
+ *      Author: utnso
+ */
+
+#ifndef CONEXIONSOCKETS_H_
+#define CONEXIONSOCKETS_H_
 
 //----------------DEFINICION DE MACROS----------------//
 
@@ -129,4 +136,6 @@ void terminarConError(int socket, char* error_msg, void* buffer);
 
 //
 
-#endif /* REDISTINTO_SOCKETS_H_ */
+
+
+#endif /* CONEXIONSOCKETS_H_ */

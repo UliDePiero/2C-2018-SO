@@ -42,7 +42,7 @@ main()
 	configurar(configuracion);
 
 	//servidor
-	printf("mostrar: %c, %c",configuracion->ip_safa,configuracion->puerto);
+
 	int socketEscucha= levantarServidor(configuracion->ip_safa,configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
 	int	socketActivo = aceptarComunicaciones(socketEscucha);
 	//conversacionComoServidor(&socketActivo);

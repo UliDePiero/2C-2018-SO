@@ -10,7 +10,8 @@
 
 //Ruta del archivo de configuraciones
 #define RUTA_CONFIG "ElDiego.config"
-#include <sockets.h>
+//#include <sockets.h>
+#include <conexionSockets.h>
 
 ///---------------------ESTRUCTURA DE CONFIGURACION DE DAM-------------------------
 

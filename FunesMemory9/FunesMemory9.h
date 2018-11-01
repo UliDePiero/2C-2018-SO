@@ -7,7 +7,8 @@
 
 #ifndef FUNESMEMORY9_H_
 #define FUNESMEMORY9_H_
-#include <sockets.h>
+//#include <sockets.h>
+#include <conexionSockets.h>
 //Ruta del archivo de configuraciones
 #define RUTA_CONFIG "FunesMemory9.config"
 

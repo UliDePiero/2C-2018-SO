@@ -3,7 +3,7 @@
 	<name>FunesMemory9</name>
 	<comment></comment>
 	<projects>
-		<project>BibliotecaSockets</project>
+		<project>BiblioConexiones</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

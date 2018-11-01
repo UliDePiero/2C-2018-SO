@@ -8,7 +8,8 @@
 #ifndef MDJ_H_
 #define MDJ_H_
 
-#include <sockets.h>
+//#include <sockets.h>
+#include <conexionSockets.h>
 //Ruta del archivo de configuraciones
 #define RUTA_CONFIG "MDJ.config"
 
