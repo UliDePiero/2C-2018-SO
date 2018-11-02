@@ -47,7 +47,7 @@ int main()
 	//servidor
 
 	//int socketEscucha= levantarServidor(configuracion->ip_safa,configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
-	int socketEscucha= levantarServidor("127.9.5.1","7000",10); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
+	int socketEscucha= levantarServidor("No tengo que pasarle la IP","8000",10); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
 	int	socketActivo = aceptarComunicaciones(socketEscucha);
 	//conversacionComoServidor(&socketActivo);
 	recibirUnMensaje(socketActivo);

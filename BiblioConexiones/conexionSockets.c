@@ -150,7 +150,9 @@ void configurarConexion(Conexion* conexion, char* ip, char* puerto){
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
-	errorCheck = getaddrinfo(ip, puerto, &hints, &(conexion->info));
+	hints.ai_flags = AI_PASSIVE;
+	//errorCheck = getaddrinfo(ip, puerto, &hints, &(conexion->info));
+	errorCheck = getaddrinfo(NULL, puerto, &hints, &(conexion->info));
 	if(errorCheck != 0)
 	{
 		fallo("No pudo configurarse una conexion al puerto/direccion \n");
@@ -245,7 +247,7 @@ int conectarAUnServidor(char *ip, char *puerto){ //TERMINAR!
 //---------------------------------------------
 
 ///FUNCIONES DE SERVIDOR
-
+#include <errno.h>
 //Asocia/bindea el socket descripto por unSocket a la conexion guardada en "conexion"
 void bindearSocket(Conexion* conexion, int unSocket){
 
@@ -254,7 +256,8 @@ void bindearSocket(Conexion* conexion, int unSocket){
 	if ((estadoDelBindeo = bind(unSocket, conexion->info->ai_addr, conexion->info->ai_addrlen)) != 0){
 		printf("flags %d ,familia %d ,protocolo %d ,tipo socket %d,longitud %d  ", conexion->info->ai_flags, conexion->info->ai_family, conexion->info->ai_protocol,conexion->info->ai_socktype,conexion->info->ai_addrlen);
 		for(int a=0; a<14; a++) printf("%d-", *conexion->info->ai_addr->sa_data );
-		perror("Error: ");
+		perror("\nError: ");
+		printf("Errno: %d\n",errno);
 		terminarConError(estadoDelBindeo, "No pudo asociarse el socket a la conexion \n", NULL);
 	}
 	printf("ESTADO: Socket de descriptor %d asociado a la conexion en la ip %s en el puerto %s \n", unSocket, conexion->ip, conexion->port);
