@@ -45,7 +45,7 @@ typedef struct {
 	int quantum;
 	int multiprogramacion;
 	int retardo_planif;
-	char ip_safa[20];
+	//char ip_safa[20];
 } ConfiguracionSAFA;
 /*
 PUERTO=8000
@@ -53,7 +53,6 @@ ALGORITMO=RR
 QUANTUM=2
 MULTIPROGRAMACION=3
 RETARDO_PLANIF=600
-IP_SAFA=192.168.1.2
 */
 //Estructura para guardar la configuracion del proceso
 ConfiguracionSAFA* configuracion;
