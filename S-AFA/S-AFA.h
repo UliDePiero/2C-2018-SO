@@ -28,14 +28,16 @@
 ///---------------------VARIABLES A UTILIZAR-------------------------
 int operacion;
 //Colas de procesos
-t_queue *listos;
-t_queue *ejecucion;
-t_queue *bloqueados;
-t_queue *terminados;
-int* primeroListos;
-int* primeroEjecucion;
-int* primeroBloqueados;
-int* primeroTerminados;
+t_queue *New;
+t_queue *Ready;
+t_queue *Exec;
+t_queue *Block;
+t_queue *Exit;
+int* primeroNew;
+int* primeroReady;
+int* primeroExec;
+int* primeroBlock;
+int* primeroExit;
 ///---------------------ESTRUCTURA DE CONFIGURACION DE S-AFA-------------------------
 
 //Estructura para datos del archivo de configuracion

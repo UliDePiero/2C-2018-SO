@@ -21,7 +21,7 @@ typedef struct {
 	int tamanio;
 	int max_linea;
 	int tam_pagina;
-	char ip_fm9[20];
+	//char ip_fm9[20];
 } ConfiguracionFM9;
 /*
 PUERTO=8000
@@ -29,7 +29,6 @@ MODO=SEG
 TAMANIO=2048
 MAX_LINEA=128
 TAM_PAGINA=1024
-IP_FM9=192.168.1.4
 */
 //Estructura para guardar la configuracion del proceso
 ConfiguracionFM9* configuracion;

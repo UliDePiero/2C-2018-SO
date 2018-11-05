@@ -40,14 +40,14 @@ int main()
 {
 	configuracion = malloc(sizeof(ConfiguracionSAFA));
 	configurar(configuracion);
-	listos = queue_create();
-	ejecucion = queue_create();
-	bloqueados = queue_create();
-	terminados = queue_create();
+	New = queue_create();
+	Ready = queue_create();
+	Exec = queue_create();
+	Block = queue_create();
+	Exit = queue_create();
 	//servidor
 
-	int socketEscucha= levantarServidor("X"/*configuracion->ip_safa*/,configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
-	//int socketEscucha= levantarServidor("No tengo que pasarle la IP","8000",10); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
+	int socketEscucha= levantarServidorIPautomatica(configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
 	int	socketActivo = aceptarComunicaciones(socketEscucha);
 	//conversacionComoServidor(&socketActivo);
 	recibirUnMensaje(socketActivo);

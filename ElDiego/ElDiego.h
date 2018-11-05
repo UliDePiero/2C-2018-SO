@@ -25,11 +25,10 @@ typedef struct {
 	char ip_mdj[20];
 	char ip_fm9[20];
 	int transfer_size;
-	char ip_dam[20];
+	//char ip_dam[20];
 } ConfiguracionDAM;
 /*
 PUERTO=8001
-IP_DIEGO=192.168.1.2
 IP_SAFA=192.168.1.1
 PUERTO_SAFA=8000
 IP_MDJ=192.168.1.3

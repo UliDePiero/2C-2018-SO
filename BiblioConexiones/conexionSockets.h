@@ -94,8 +94,10 @@ void crearHilo(pthread_t* hilo, void *(*funcion) (void *), void *__restrict argu
 
 //Funciones de conexion
 void configurarConexion(Conexion* conexion,char* ip, char* puerto);
+void configurarConexionIPautomatica(Conexion* conexion, char* puerto);
 void puertoPosta(Conexion* conexion);
 void mostrarIPs();
+int crearSocketIPautomatica(Conexion* conexion, char* puerto);
 int crearSocket(Conexion* conexion, char* ip, char* puerto);
 void cerrarSocket(int socket);
 
@@ -109,6 +111,7 @@ void ponerAEscuchar(int unSocket, int ClientesEnEspera);
 int aceptarComunicaciones(int socketEscucha);
 void* obtenerIPCliente(struct sockaddr* sa);
 struct timeval configurarTimeout(int segundos, int microsegundos);
+int levantarServidorIPautomatica(char* puerto, int backlog);
 int levantarServidor(char* ip, char* puerto, int backlog);
 
 //Funciones de comunicacion

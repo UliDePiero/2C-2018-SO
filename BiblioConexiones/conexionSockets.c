@@ -1,5 +1,5 @@
 #include "conexionSockets.h"
-
+#include <errno.h>
 //t_log * logger;
 
 ///FUNCIONES DE ARCHIVOS DE CONFIGURACION
@@ -150,9 +150,7 @@ void configurarConexion(Conexion* conexion, char* ip, char* puerto){
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_flags = AI_PASSIVE;
-	//errorCheck = getaddrinfo(ip, puerto, &hints, &(conexion->info));
-	errorCheck = getaddrinfo(NULL, puerto, &hints, &(conexion->info));
+	errorCheck = getaddrinfo(ip, puerto, &hints, &(conexion->info));
 	if(errorCheck != 0)
 	{
 		fallo("No pudo configurarse una conexion al puerto/direccion \n");
@@ -160,6 +158,25 @@ void configurarConexion(Conexion* conexion, char* ip, char* puerto){
 	conexion->port = strdup(puerto);								//Para guardarlos tambien como
 	conexion->ip = strdup(ip);										//cadenas, y no solo binariamente
 	printf("\nESTADO: Conexion para la ip %s en el puerto %s configurada \n", ip, puerto);
+	return;
+
+}
+//Guardo en una estructura conexion los datos de una conexion a cierto puerto
+void configurarConexionIPautomatica(Conexion* conexion, char* puerto){
+
+	struct addrinfo hints;
+	int errorCheck;													//Para checkear que no haya error
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags = AI_PASSIVE;
+	errorCheck = getaddrinfo(NULL, puerto, &hints, &(conexion->info));
+	if(errorCheck != 0)
+	{
+		fallo("No pudo configurarse una conexion al puerto/direccion \n");
+	}
+	conexion->port = strdup(puerto);								//Para guardarlo tambien como cadena, y no solo binariamente
+	printf("\nESTADO: Conexion en el puerto %s configurada \n", puerto);
 	return;
 
 }
@@ -205,6 +222,18 @@ int crearSocket(Conexion* conexion, char* ip, char* puerto){
 	return descriptor;
 
 }
+//Configura una conexion a una ip automatica y un puerto, crea un socket para ella y le asigna un descriptor
+int crearSocketIPautomatica(Conexion* conexion, char* puerto){
+
+	configurarConexionIPautomatica(conexion, puerto);
+	int descriptor = socket(conexion->info->ai_family, conexion->info->ai_socktype, conexion->info->ai_protocol);
+	if(descriptor == -1){
+		terminarConError((int)socket,"No se pudo asignar un socket a la conexion \n", NULL);
+	}
+	printf("ESTADO: Conexion en el puerto %s configurada; creado un socket apropiado, cuyo descriptor es %d \n", puerto, descriptor);
+	return descriptor;
+
+}
 //---------------------------------------------
 
 //Cierra el socket descripto por descriptorSocket; de no ser posible, avisa por pantalla
@@ -247,7 +276,6 @@ int conectarAUnServidor(char *ip, char *puerto){ //TERMINAR!
 //---------------------------------------------
 
 ///FUNCIONES DE SERVIDOR
-#include <errno.h>
 //Asocia/bindea el socket descripto por unSocket a la conexion guardada en "conexion"
 void bindearSocket(Conexion* conexion, int unSocket){
 
@@ -260,7 +288,7 @@ void bindearSocket(Conexion* conexion, int unSocket){
 		printf("Errno: %d\n",errno);
 		terminarConError(estadoDelBindeo, "No pudo asociarse el socket a la conexion \n", NULL);
 	}
-	printf("ESTADO: Socket de descriptor %d asociado a la conexion en la ip %s en el puerto %s \n", unSocket, conexion->ip, conexion->port);
+	printf("ESTADO: Socket de descriptor %d asociado a la conexion en el puerto %s \n", unSocket, conexion->port);
 	return;
 
 }
@@ -328,6 +356,20 @@ int levantarServidor(char* ip, char* puerto, int backlog) {
 	Conexion conexion;
 	int activado = TRUE;
 	int socketEscucha = crearSocket(&conexion, ip, puerto);
+	conexion.tamanioAddress = sizeof(conexion.address);
+	setsockopt(socketEscucha, SOL_SOCKET, SO_REUSEADDR, &activado, sizeof(activado));//mientras este en etapa de pruebas
+	bindearSocket(&conexion, socketEscucha);
+	freeaddrinfo(conexion.info);
+	ponerAEscuchar(socketEscucha, backlog);
+	return socketEscucha;
+
+}
+//Levanta un servidor en la ip y el puerto determinados
+int levantarServidorIPautomatica(char* puerto, int backlog) {
+
+	Conexion conexion;
+	int activado = TRUE;
+	int socketEscucha = crearSocketIPautomatica(&conexion, puerto);
 	conexion.tamanioAddress = sizeof(conexion.address);
 	setsockopt(socketEscucha, SOL_SOCKET, SO_REUSEADDR, &activado, sizeof(activado));//mientras este en etapa de pruebas
 	bindearSocket(&conexion, socketEscucha);

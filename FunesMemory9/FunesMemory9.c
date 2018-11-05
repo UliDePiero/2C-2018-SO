@@ -14,7 +14,7 @@ void configurar(ConfiguracionFM9* configuracion) {
 					   "TAMANIO",
 					   "MAX_LINEA",
 					   "TAM_PAGINA",
-					   "IP_FM9"
+					//   "IP_FM9"
 					 };
 
 	t_config* archivoConfig = archivoConfigCrear(RUTA_CONFIG, campos);
@@ -29,7 +29,7 @@ void configurar(ConfiguracionFM9* configuracion) {
 	configuracion->tamanio = archivoConfigSacarIntDe(archivoConfig, "TAMANIO");
 	configuracion->max_linea = archivoConfigSacarIntDe(archivoConfig, "MAX_LINEA");
 	configuracion->tam_pagina = archivoConfigSacarIntDe(archivoConfig, "TAM_PAGINA");
-	strcpy(configuracion->ip_fm9, archivoConfigSacarStringDe(archivoConfig, "IP_FM9"));
+  //strcpy(configuracion->ip_fm9, archivoConfigSacarStringDe(archivoConfig, "IP_FM9"));
 
 	archivoConfigDestruir(archivoConfig);
 }
@@ -40,7 +40,7 @@ main()
 
 	//servidor
 
-	int socketEscucha= levantarServidor(configuracion->ip_fm9,configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
+	int socketEscucha= levantarServidorIPautomatica(configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
 	int	socketActivo = aceptarComunicaciones(socketEscucha);
 	//conversacionComoServidor(&socketActivo);
 	recibirUnMensaje(socketActivo);
