@@ -37,7 +37,18 @@ main()
 {
 	configuracion = malloc(sizeof(ConfiguracionFM9));
 	configurar(configuracion);
-
+	switch(configuracion->modo)
+	{
+		case 1:
+			paginasInvertidas(configuracion);
+			break;
+		case 2:
+			segmentacionPaginada(configuracion);
+			break;
+		default: //Default para que no de error
+			segmentacionPura(configuracion);
+			break;
+	}
 	//servidor
 
 	int socketEscucha= levantarServidorIPautomatica(configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
@@ -48,4 +59,28 @@ main()
 	cerrarSocket(socketActivo);
 	cerrarSocket(socketEscucha);
 	free(configuracion);
+}
+segmentacionPura(ConfiguracionFM9* configuracion)
+{
+	int cantidadSegmentos = configuracion->max_linea / configuracion->tamanio;
+	char storage[cantidadSegmentos][configuracion->max_linea]; //Memoria real
+	int tablaSegmentos[cantidadSegmentos][3];
+	char tablaPaths[cantidadSegmentos][configuracion->max_linea]; //Tabla para saber la localizacion de los archivos
+
+	for(int i=0; i < cantidadSegmentos; i++)
+	{
+		strcpy(storage[0], "\0");
+		tablaSegmentos[i][0] = tablaSegmentos[i][1] = tablaSegmentos[i][2] = 0;
+		strcpy(tablaPaths[0], "\0");
+	}
+
+
+}
+paginasInvertidas(ConfiguracionFM9* configuracion)
+{
+
+}
+segmentacionPaginada(ConfiguracionFM9* configuracion)
+{
+
 }
