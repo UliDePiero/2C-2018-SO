@@ -10,18 +10,17 @@
 //#include <sockets.h>
 #include <conexionSockets.h>
 //Ruta del archivo de configuraciones
-#define RUTA_CONFIG "FunesMemory9.config"
+#define RUTA_CONFIG "FM9Configuracion.txt"
 
 ///---------------------ESTRUCTURA DE CONFIGURACION DE FM9-------------------------
 
 //Estructura para datos del archivo de configuracion
 typedef struct {
 	char puerto[10];
-	int modo;						//Se lee una cadena, pero se guarda con un entero (constante predefinida)
+	char modo[3];
 	int tamanio;
 	int max_linea;
 	int tam_pagina;
-	//char ip_fm9[20];
 } ConfiguracionFM9;
 /*
 PUERTO=8000

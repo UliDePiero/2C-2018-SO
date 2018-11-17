@@ -25,7 +25,7 @@ endif
 all: FunesMemory9
 
 dependents:
-	-cd /home/utnso/workspace/tp-2018-2c-Intel-y-Gentes/BiblioConexiones/Debug && $(MAKE) clean all
+	-cd /home/utnso/workspace/tp-2018-2c-Intel-y-Gentes/BiblioConexiones/Debug && $(MAKE) all
 
 # Tool invocations
 FunesMemory9: $(OBJS) $(USER_OBJS) /home/utnso/workspace/tp-2018-2c-Intel-y-Gentes/BiblioConexiones/Debug/libBiblioConexiones.so
