@@ -31,6 +31,23 @@ TAM_PAGINA=1024
 */
 //Estructura para guardar la configuracion del proceso
 ConfiguracionFM9* configuracion;
+int cantidadSegmentos;
+void configurar(ConfiguracionFM9* configuracion);
+
+//Segmentacion pura
+void segmentacionPura();
+void inicializar(int (*tabla)[3], char (*storage)[configuracion->max_linea]);
+int cantidadProcesos(int (*tabla)[3]);
+int encontrarProceso(int (*tabla)[3], int PId);
+int borrarProceso(int (*tabla)[3], char (*storage)[configuracion->max_linea], int PId);
+void ordenarTabla(int (*tabla)[3]);
+void ordenar(int (*tabla)[3], char (*storage)[configuracion->max_linea]);
+
+//Paginacion inversa
+void paginasInvertidas();
+
+//Segmentacion paginada
+void segmentacionPaginada();
 
 
 #endif /* FUNESMEMORY9_H_ */
