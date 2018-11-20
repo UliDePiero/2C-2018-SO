@@ -37,6 +37,7 @@ void configurar(ConfiguracionFM9* configuracion);
 //Segmentacion pura
 void segmentacionPura();
 void inicializar(int (*tabla)[3], char (*storage)[configuracion->max_linea]);
+void mostrarTablas(int (*tabla)[3], char (*storage)[configuracion->max_linea]);
 int cantidadSegmentos(int (*tabla)[3]);
 int encontrarProceso(int (*tabla)[3], int PId);
 int borrarProceso(int (*tabla)[3], char (*storage)[configuracion->max_linea], int PId);
@@ -46,6 +47,7 @@ int cargarProceso(int (*tabla)[3], char (*storage)[configuracion->max_linea], ch
 int espacioLibre(int (*tabla)[3]);
 int encontrarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea], char *nombreArchivo);
 int encontrarSegmento(int (*tabla)[3], int linea);
+int borrarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea], char *nombreArchivo);
 int cargarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea], char (*archivo)[configuracion->max_linea], char *nombreArchivo, int cantLineas);
 
 

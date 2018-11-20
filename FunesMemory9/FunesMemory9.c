@@ -58,6 +58,7 @@ int main(){
 
 	free(configuracion);
 }
+
 //Segmentacion pura
 void segmentacionPura(){
 	totalLineas = configuracion->tamanio / configuracion->max_linea;
@@ -65,49 +66,41 @@ void segmentacionPura(){
 	int tablaSegmentos[totalLineas][3];  //0=vacio 1=archivo 2+=proceso
 	inicializar(tablaSegmentos, storage);
 
-/*	strcpy(storage[0], "prueba2");
-	tablaSegmentos[0][0] = 2;
-	tablaSegmentos[0][1] = 0;
-	tablaSegmentos[0][2] = 0;
+	//Pruebas:
+	/*char proceso1[1][configuracion->max_linea];
+	strcpy(proceso1[0], "proceso2");
 
-	strcpy(storage[4], "prueba3.1");
-	strcpy(storage[5], "prueba3.2");
-	tablaSegmentos[4][0] = 3;
-	tablaSegmentos[4][1] = 4;
-	tablaSegmentos[4][2] = 5;
+	char proceso2[2][configuracion->max_linea];
+	strcpy(proceso2[0], "proceso3.1");
+	strcpy(proceso2[1], "proceso3.2");
 
-	strcpy(storage[8], "prueba4.1");
-	strcpy(storage[9], "prueba4.2");
-	strcpy(storage[10], "prueba4.3");
-	tablaSegmentos[9][0] = 4;
-	tablaSegmentos[9][1] = 8;
-	tablaSegmentos[9][2] = 10;
+	char proceso3[3][configuracion->max_linea];
+	strcpy(proceso3[0], "proceso4.1");
+	strcpy(proceso3[1], "proceso4.2");
+	strcpy(proceso3[2], "proceso4.3");
 
-	strcpy(storage[15], "prueba5");
-	tablaSegmentos[15][0] = 5;
-	tablaSegmentos[15][1] = 15;
-	tablaSegmentos[15][2] = 15;*/
+	char proceso5[1][configuracion->max_linea];
+	strcpy(proceso5[0], "proceso5");
 
-/*	//Prueba carga de archivo
 	char nombre[configuracion->max_linea];
 	char archivo[3][configuracion->max_linea];
 	strcpy(nombre, "nombreArchivo");
 	strcpy(archivo[0], "archivo1");
 	strcpy(archivo[1], "archivo2");
 	strcpy(archivo[2], "archivo3");
-	cargarArchivo(tablaSegmentos, storage, archivo, nombre, 3);*/
 
-	//ordenarTabla(tablaSegmentos);
+	cargarArchivo(tablaSegmentos, storage, archivo, nombre, 3);
+	cargarProceso(tablaSegmentos, storage, proceso1, 2, 1);
+	cargarProceso(tablaSegmentos, storage, proceso2, 3, 2);
+	cargarProceso(tablaSegmentos, storage, proceso3, 4, 3);
+	cargarProceso(tablaSegmentos, storage, proceso5, 5, 1);
+	borrarProceso(tablaSegmentos, storage, 3);
+	borrarArchivo(tablaSegmentos, storage, nombre);
+	cargarProceso(tablaSegmentos, storage, proceso2, 3, 2);
+	cargarProceso(tablaSegmentos, storage, proceso2, 3, 2);*/
+
 	ordenar(tablaSegmentos, storage);
-
-	for(int i=0; i < totalLineas; i++){
-		printf("tabla %d: %d %d %d\n", i, tablaSegmentos[i][0], tablaSegmentos[i][1], tablaSegmentos[i][2]);
-	}
-	for(int i=0; i < totalLineas; i++){
-		printf("storage %d: %s\n", i, storage[i]);
-	}
-
-
+	mostrarTablas(tablaSegmentos, storage);
 }
 void inicializar(int (*tabla)[3], char (*storage)[configuracion->max_linea]){
 	for(int i=0; i < totalLineas; i++){
@@ -184,20 +177,34 @@ int encontrarSegmento(int (*tabla)[3], int linea){
 	}
 	return -1;
 }
+void mostrarTablas(int (*tabla)[3], char (*storage)[configuracion->max_linea]){
+	//Funcion solo para pruebas
+	//Imprime por pantalla la tabla de segmentos y el storage
+	for(int i=0; i < totalLineas; i++){
+		printf("tabla %d: %d %d %d\n", i, tabla[i][0], tabla[i][1], tabla[i][2]);
+	}
+	for(int i=0; i < totalLineas; i++){
+		printf("storage %d: %s\n", i, storage[i]);
+	}
+}
 
 int cargarProceso(int (*tabla)[3], char (*storage)[configuracion->max_linea], char (*proceso)[configuracion->max_linea], int PId, int cantLineas){
 	//Carga un nuevo proceso en memoria
 	//Retorna -1 si no hay espacio disponible
+	//Retorna 0 si Ya existe un proceso con ese id
 	ordenar(tabla, storage);
+	if(encontrarProceso(tabla, PId) != -1){
+		return 0; //Ya existe un proceso con ese id
+	}
 	int espLibre = espacioLibre(tabla);
 	int cantSegmentos = cantidadSegmentos(tabla);
-	int a = 0;
 	if(cantLineas > espLibre){
 		return -1;
 	}
 	tabla[cantSegmentos][0] = PId;
 	tabla[cantSegmentos][1] = tabla[cantSegmentos-1][2] +1;
 	tabla[cantSegmentos][2] = tabla[cantSegmentos-1][2] + cantLineas;
+	int a = 0;
 	for(int i = tabla[cantSegmentos][1]; i <= tabla[cantSegmentos][2]; i++){
 		strcpy(storage[i], proceso[a]);
 		a++;
@@ -231,6 +238,7 @@ int encontrarProceso(int (*tabla)[3], int PId){
 
 int encontrarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea], char *nombreArchivo){
 	//Retorna el segmento del archivo
+	//Retorna -1 si no existe el archivo en memoria
 	ordenar(tabla, storage);
 	for(int i = 0; i < totalLineas; i++){
 		if(strcmp(storage[i], nombreArchivo)==0){
@@ -255,7 +263,11 @@ int borrarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea], ch
 int cargarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea], char (*archivo)[configuracion->max_linea], char *nombreArchivo, int cantLineas){
 	//Carga un nuevo archivo en memoria
 	//Retorna -1 si no hay espacio disponible
+	//Retorna 0 si ya hay un archivo con ese nombre
 	ordenar(tabla, storage);
+	if(encontrarArchivo(tabla, storage, nombreArchivo) != -1){
+		return 0;
+	}
 	int espLibre = espacioLibre(tabla);
 	int cantSegmentos = cantidadSegmentos(tabla);
 	int a = 0;
