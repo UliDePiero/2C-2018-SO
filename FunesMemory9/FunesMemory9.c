@@ -63,11 +63,12 @@ int main(){
 void segmentacionPura(){
 	totalLineas = configuracion->tamanio / configuracion->max_linea;
 	char storage[totalLineas][configuracion->max_linea]; //Memoria real
-	int tablaSegmentos[totalLineas][3];  //0=vacio 1=archivo 2+=proceso
+	int tablaSegmentos[totalLineas][3];  //0=vacio 1=archivo 2+=proceso  // PId - Limite - Base
 	inicializar(tablaSegmentos, storage);
 
 	//Pruebas:
-	/*char proceso1[1][configuracion->max_linea];
+	/*
+	char proceso1[1][configuracion->max_linea];
 	strcpy(proceso1[0], "proceso2");
 
 	char proceso2[2][configuracion->max_linea];
@@ -95,7 +96,8 @@ void segmentacionPura(){
 	cargarProceso(tablaSegmentos, storage, proceso3, 4, 3);
 	cargarProceso(tablaSegmentos, storage, proceso5, 5, 1);
 	borrarProceso(tablaSegmentos, storage, 3);
-	//borrarArchivo(tablaSegmentos, storage, nombre);
+	borrarArchivo(tablaSegmentos, storage, nombre);
+	cargarArchivo(tablaSegmentos, storage, archivo, nombre, 3);
 	cargarProceso(tablaSegmentos, storage, proceso2, 3, 2);
 	cargarProceso(tablaSegmentos, storage, proceso2, 3, 2);*/
 
@@ -146,16 +148,15 @@ void ordenar(int (*tabla)[3], char (*storage)[configuracion->max_linea]){
 		if(cant == 0){
 			return;
 		}
-		while(tabla[i][1] != a){
-			for(int u = a; u <= tabla[i][2]; u++){
-				strcpy(storage[u], storage[u+1]);
+		while(tabla[i][2] != a){
+			for(int u = 0; u <= tabla[i][1]; u++){
+				strcpy(storage[tabla[i][2] +u -1], storage[tabla[i][2] +u]);
 			}
-			strcpy(storage[tabla[i][2]], "\0");
-			tabla[i][1]--;
+			strcpy(storage[tabla[i][1] + tabla[i][2] -1], "\0");
 			tabla[i][2]--;
 		}
 		cant--;
-		a+= tabla[i][2] - tabla[i][1] + 1;
+		a+= tabla[i][1];
 	}
 }
 int espacioLibre(int (*tabla)[3]){
@@ -163,15 +164,16 @@ int espacioLibre(int (*tabla)[3]){
 	ordenarTabla(tabla);
 	for(int i = 0; i < totalLineas-1; i++){
 		if(tabla[i][0] == 0){
-			return totalLineas - tabla[i-1][2] -1;
+			return totalLineas - tabla[i-1][2] - tabla[i-1][1];
 		}
 	}
 	return totalLineas;
 }
 int encontrarSegmento(int (*tabla)[3], int linea){
 	//Retorna el segmento que contiene a la linea
+	//Retorna -1 si el segmento no existe
 	for(int i = 0; i < totalLineas; i++){
-		if(tabla[i][1] <= linea && linea <= tabla[i][2]){
+		if(tabla[i][2] <= linea && linea < tabla[i][2] + tabla[i][1]){
 			return i;
 		}
 	}
@@ -190,8 +192,12 @@ void mostrarTablas(int (*tabla)[3], char (*storage)[configuracion->max_linea]){
 
 int cargarProceso(int (*tabla)[3], char (*storage)[configuracion->max_linea], char (*proceso)[configuracion->max_linea], int PId, int cantLineas){
 	//Carga un nuevo proceso en memoria
+	//Retorna -2 si el proceso tiene id invalido
 	//Retorna -1 si no hay espacio disponible
 	//Retorna 0 si Ya existe un proceso con ese id
+	if(PId < 2){
+		return -2;
+	}
 	ordenar(tabla, storage);
 	if(encontrarProceso(tabla, PId) != -1){
 		return 0; //Ya existe un proceso con ese id
@@ -202,12 +208,10 @@ int cargarProceso(int (*tabla)[3], char (*storage)[configuracion->max_linea], ch
 		return -1;
 	}
 	tabla[cantSegmentos][0] = PId;
-	tabla[cantSegmentos][1] = tabla[cantSegmentos-1][2] +1;
-	tabla[cantSegmentos][2] = tabla[cantSegmentos-1][2] + cantLineas;
-	int a = 0;
-	for(int i = tabla[cantSegmentos][1]; i <= tabla[cantSegmentos][2]; i++){
-		strcpy(storage[i], proceso[a]);
-		a++;
+	tabla[cantSegmentos][1] = cantLineas;
+	tabla[cantSegmentos][2] = tabla[cantSegmentos-1][2] + tabla[cantSegmentos-1][1];
+	for(int i = 0; i < tabla[cantSegmentos][1]; i++){
+		strcpy(storage[tabla[cantSegmentos][2] + i], proceso[i]);
 	}
 
 	return 1;
@@ -219,14 +223,14 @@ int borrarProceso(int (*tabla)[3], char (*storage)[configuracion->max_linea], in
 	if(segmento == -1){
 		return -1;
 	}
-	for(int i = tabla[segmento][1]; i <= tabla[segmento][2]; i++){
-		strcpy(storage[i], "\0");
+	for(int i = 0; i < tabla[segmento][1]; i++){
+		strcpy(storage[tabla[segmento][2] + i], "\0");
 	}
 	tabla[segmento][0] = tabla[segmento][1] = tabla[segmento][2] = 0;
 	return 1;
 }
 int encontrarProceso(int (*tabla)[3], int PId){
-	//Retorna el lugar del proceso en la tabla de segmentos
+	//Retorna el segmento del proceso
 	//Retorna -1 si no existe el proceso
 	for(int i = 0; i<totalLineas; i++){
 		if(tabla[i][0] == PId){
@@ -236,18 +240,21 @@ int encontrarProceso(int (*tabla)[3], int PId){
 	return -1;
 }
 int encontrarProcesoOffset(int (*tabla)[3], int PId, int offset){
-	//Retorna el lugar de la linea del proceso con ese offset
-	//Lugar 0 -> offset 0
+	//Retorna el lugar de la linea del proceso con ese offset  //Lugar 0 -> offset 0
 	//Retorna -1 si el proceso no existe
 	//Retorna -2 si el offset es mayor que el largo del proceso
+	//Retorna -3 si el offset es invalido
+	if(offset < 0){
+		return -3;
+	}
 	int lugar = encontrarProceso(tabla, PId);
 	if(lugar == -1){
 		return -1;
 	}
-	if(offset > tabla[lugar][2] - tabla[lugar][1]){
+	if(offset >= tabla[lugar][1]){
 		return -2;
 	}
-	return tabla[lugar][1] + offset;
+	return tabla[lugar][2] + offset;
 }
 
 int encontrarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea], char *nombreArchivo){
@@ -266,13 +273,17 @@ int encontrarArchivoOffset(int (*tabla)[3], char (*storage)[configuracion->max_l
 	//Lugar 0 -> offset 0
 	//Retorna -1 si no existe el archivo en memoria
 	//Retorna -2 si el offset es mayor que el largo del archivo
+	//Retorna -3 si el offset es invalido
+	if(offset < 0){
+		return -3;
+	}
 	ordenar(tabla, storage);
-	offset++; //Esto es porque la primera linea es el nombre del archivo
+	offset++;	//Porque la primera linea es el nombre del archivo
 	int lugar = encontrarArchivo(tabla, storage, nombreArchivo);
 	if(lugar == -1){
 		return -1;
 	}
-	if(offset > tabla[lugar][2] - tabla[lugar][1]){
+	if(offset >= tabla[lugar][2] + tabla[lugar][1]){
 		return -2;
 	}
 	return tabla[lugar][1] + offset;
@@ -284,8 +295,8 @@ int borrarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea], ch
 	if(segmento == -1){
 		return -1;
 	}
-	for(int i = tabla[segmento][1]; i <= tabla[segmento][2]; i++){
-		strcpy(storage[i], "\0");
+	for(int i = 0; i < tabla[segmento][1]; i++){
+		strcpy(storage[tabla[segmento][2] + i], "\0");
 	}
 	tabla[segmento][0] = tabla[segmento][1] = tabla[segmento][2] = 0;
 	return 1;
@@ -300,18 +311,15 @@ int cargarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea], ch
 	}
 	int espLibre = espacioLibre(tabla);
 	int cantSegmentos = cantidadSegmentos(tabla);
-	int a = 0;
 	if(cantLineas+1 > espLibre){
-		printf("cantLineas %d espLibre %d\n", cantLineas+1, espacioLibre(tabla));
 		return -1;
 	}
 	tabla[cantSegmentos][0] = 1; //Significa que el segmento es de un archivo
-	tabla[cantSegmentos][1] = tabla[cantSegmentos-1][2] +1;
-	tabla[cantSegmentos][2] = tabla[cantSegmentos-1][2] + cantLineas + 1;
-	strcpy(storage[tabla[cantSegmentos][1]], nombreArchivo);
-	for(int i = tabla[cantSegmentos][1]+1; i <= tabla[cantSegmentos][2]; i++){
-		strcpy(storage[i], archivo[a]);
-		a++;
+	tabla[cantSegmentos][1] = cantLineas + 1;
+	tabla[cantSegmentos][2] = tabla[cantSegmentos-1][2] + tabla[cantSegmentos-1][1];
+	strcpy(storage[tabla[cantSegmentos][2]], nombreArchivo);
+	for(int i = 0; i < tabla[cantSegmentos][1]-1; i++){
+		strcpy(storage[tabla[cantSegmentos][2] +i +1], archivo[i]);
 	}
 
 	return 1;
