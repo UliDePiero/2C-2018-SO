@@ -95,7 +95,7 @@ void segmentacionPura(){
 	cargarProceso(tablaSegmentos, storage, proceso3, 4, 3);
 	cargarProceso(tablaSegmentos, storage, proceso5, 5, 1);
 	borrarProceso(tablaSegmentos, storage, 3);
-	borrarArchivo(tablaSegmentos, storage, nombre);
+	//borrarArchivo(tablaSegmentos, storage, nombre);
 	cargarProceso(tablaSegmentos, storage, proceso2, 3, 2);
 	cargarProceso(tablaSegmentos, storage, proceso2, 3, 2);*/
 
@@ -169,7 +169,7 @@ int espacioLibre(int (*tabla)[3]){
 	return totalLineas;
 }
 int encontrarSegmento(int (*tabla)[3], int linea){
-	//Retorna el segmento que contiene la linea
+	//Retorna el segmento que contiene a la linea
 	for(int i = 0; i < totalLineas; i++){
 		if(tabla[i][1] <= linea && linea <= tabla[i][2]){
 			return i;
@@ -235,6 +235,20 @@ int encontrarProceso(int (*tabla)[3], int PId){
 	}
 	return -1;
 }
+int encontrarProcesoOffset(int (*tabla)[3], int PId, int offset){
+	//Retorna el lugar de la linea del proceso con ese offset
+	//Lugar 0 -> offset 0
+	//Retorna -1 si el proceso no existe
+	//Retorna -2 si el offset es mayor que el largo del proceso
+	int lugar = encontrarProceso(tabla, PId);
+	if(lugar == -1){
+		return -1;
+	}
+	if(offset > tabla[lugar][2] - tabla[lugar][1]){
+		return -2;
+	}
+	return tabla[lugar][1] + offset;
+}
 
 int encontrarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea], char *nombreArchivo){
 	//Retorna el segmento del archivo
@@ -246,6 +260,22 @@ int encontrarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea],
 		}
 	}
 	return -1;
+}
+int encontrarArchivoOffset(int (*tabla)[3], char (*storage)[configuracion->max_linea], char *nombreArchivo, int offset){
+	//Retorna el lugar de la linea del archivo con ese offset
+	//Lugar 0 -> offset 0
+	//Retorna -1 si no existe el archivo en memoria
+	//Retorna -2 si el offset es mayor que el largo del archivo
+	ordenar(tabla, storage);
+	offset++; //Esto es porque la primera linea es el nombre del archivo
+	int lugar = encontrarArchivo(tabla, storage, nombreArchivo);
+	if(lugar == -1){
+		return -1;
+	}
+	if(offset > tabla[lugar][2] - tabla[lugar][1]){
+		return -2;
+	}
+	return tabla[lugar][1] + offset;
 }
 int borrarArchivo(int (*tabla)[3], char (*storage)[configuracion->max_linea], char *nombreArchivo){
 	//Borra el archivo de la tabla de segmentos y memoria
