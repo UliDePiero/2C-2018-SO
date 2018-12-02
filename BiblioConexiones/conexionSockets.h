@@ -40,6 +40,7 @@
 //#include <parsi/parser.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include "Protocolo.h"
 
 ///----------------STRUCTS-----------------///
 
@@ -109,6 +110,7 @@ int conectarAUnServidor(char* ip, char* puerto);
 void bindearSocket(Conexion* conexion, int unSocket);
 void ponerAEscuchar(int unSocket, int ClientesEnEspera);
 int aceptarComunicaciones(int socketEscucha);
+void aceptarComunicacionesParaHilo(int socketEscucha);
 void* obtenerIPCliente(struct sockaddr* sa);
 struct timeval configurarTimeout(int segundos, int microsegundos);
 int levantarServidorIPautomatica(char* puerto, int backlog);

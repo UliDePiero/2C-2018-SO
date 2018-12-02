@@ -323,6 +323,51 @@ int aceptarComunicaciones(int socketEscucha) {
 	printf("ESTADO: Conexion con el cliente de ip %s establecida a traves del socket descripto por %d \n", s, socketActivo);
 	return socketActivo;
 }
+void aceptarComunicacionesParaHilo(int socketEscucha) {
+
+	struct sockaddr_storage conexionEntrante;
+	socklen_t tamanioDir = sizeof(conexionEntrante);
+	int socketActivo;
+	char s[INET_ADDRSTRLEN];
+	t_prot_mensaje* mensaje;
+
+	do{ //Loop a la espera de conexiones
+		socketActivo = accept(socketEscucha, (struct sockaddr *)&conexionEntrante, &tamanioDir);
+		inet_ntop(conexionEntrante.ss_family, obtenerIPCliente((struct sockaddr *)&conexionEntrante), s, sizeof(s)); //Guardar IP del cliente en conexion.ip
+		printf("ESTADO: Conexion con el cliente de ip %s establecida a traves del socket descripto por %d \n", s, socketActivo);
+		//Se recibe un mensaje del cliente
+		mensaje = RecibirMensaje(socketActivo);
+		t_header headerMensaje = mensaje->head;
+		t_cliente cliente = *(t_cliente*) mensaje->payload;
+		LiberarMensaje(mensaje);
+
+		if(cliente == ElDiego){
+			for(int i=0; i<3; i++){
+				if(MatrizDeConexiones[i][0] == socketEscucha)
+				{
+					MatrizDeConexiones[i][1]=1;
+					printf("Se conecto el Diego. \n");
+				}
+			}
+		}else if (cliente == CPU){
+			mensaje = RecibirMensaje(socketActivo);
+			char* nombre = LeerMensaje(mensaje);
+			for(int i=0; i<2; i++){
+				if(MatrizDeConexiones[i][0] == socketEscucha)
+				{
+					MatrizDeConexiones[i][2]++;
+					printf("Nuevo CPU: <%s>\n", nombre);
+				}
+			}
+			//agregar_nuevo_esi(socketActivo, nombre);
+			LiberarMensaje(mensaje);
+		}
+	}while(socketActivo  > 0);
+	cerrarSocket(socketEscucha);
+	LiberarMensaje(mensaje);
+	//finalizar();
+	pthread_exit(0);
+}
 //---------------------------------------------
 
 //Devuelve, segun el protocolo, una estructura sin_addr con la IP del cliente cuyo sockaddr es apuntado por sa
@@ -364,7 +409,7 @@ int levantarServidor(char* ip, char* puerto, int backlog) {
 	return socketEscucha;
 
 }
-//Levanta un servidor en la ip y el puerto determinados
+//Levanta un servidor en el puerto determinado
 int levantarServidorIPautomatica(char* puerto, int backlog) {
 
 	Conexion conexion;

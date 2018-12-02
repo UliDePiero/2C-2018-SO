@@ -40,20 +40,36 @@ int main()
 {
 	configuracion = malloc(sizeof(ConfiguracionSAFA));
 	configurar(configuracion);
-	New = queue_create();
+
+	New = queue_create(); //queue_push(New, nuevoCliente);
 	Ready = queue_create();
 	Exec = queue_create();
 	Block = queue_create();
 	Exit = queue_create();
-	//servidor
 
-	int socketEscucha= levantarServidorIPautomatica(configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
-	int	socketActivo = aceptarComunicaciones(socketEscucha);
-	//conversacionComoServidor(&socketActivo);
-	recibirUnMensaje(socketActivo);
-	conversar(&socketActivo);
+	//servidor
+	socketEscucha= levantarServidorIPautomatica(configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
+	MatrizDeConexiones[0][0] = socketEscucha;
+	//socketActivo = aceptarComunicaciones(socketEscucha);
+	free(configuracion);
+	crearHilo(&hiloConexionesEntrantes,(void*) aceptarComunicacionesParaHilo, (void*)socketEscucha, "Planificador");
+	printf("Estado: Corrupto");
+		/*
+		 En dicho estado no podrá aceptar el ingreso de ningún run para un programa G.DT. Para que salga de dicho estado deberán pasar dos cosas:
+		 *La conexión del proceso “El Diego”.
+		 *La conexión de por lo menos un Proceso CPU.
+		 */
+	while((MatrizDeConexiones[0][1] * MatrizDeConexiones[0][2]) == 0);
+	printf("Estado: Operativo");
+	/*
+	pthread_create(&hiloPlanificacion, NULL, (void*)planificar, NULL);
+	pthread_create(&hiloConsola, NULL, (void*)iniciar_consola, NULL);
+
+	pthread_join(hiloConexionesEntrantes, NULL);
+	pthread_join(hiloPlanificacion, NULL);
+	pthread_join(hiloConsola, NULL);
+	*/
 
 	cerrarSocket(socketActivo);
 	cerrarSocket(socketEscucha);
-	free(configuracion);
 }

@@ -26,7 +26,11 @@
 #include <commons/collections/queue.h>
 
 ///---------------------VARIABLES A UTILIZAR-------------------------
-int operacion;
+int socketEscucha;
+int	socketActivo;
+pthread_t hiloConexionesEntrantes;
+pthread_t hiloPlanificacion;
+pthread_t hiloConsola;
 //Colas de procesos
 t_queue *New;
 t_queue *Ready;
@@ -38,6 +42,8 @@ int* primeroReady;
 int* primeroExec;
 int* primeroBlock;
 int* primeroExit;
+int* nuevoCliente; //Puntero al nuevo Cliente entrante
+int idCLI; //ID del nuevo Cliente entrante
 ///---------------------ESTRUCTURA DE CONFIGURACION DE S-AFA-------------------------
 
 //Estructura para datos del archivo de configuracion
