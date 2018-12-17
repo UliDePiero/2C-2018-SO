@@ -1,0 +1,12 @@
+abrir /equipos/Racing.txt
+concentrar
+asignar /equipos/Racing.txt 9 GustavoBou
+wait Conmebol
+signal Conmebol
+flush /equipos/Racing.txt
+close /equipos/Racing.txt
+crear /equipos/Racing.txt 11
+borrar /equipos/Racing.txt
+#SoyUnComentario
+abrir /equipos/Defensa.txt
+                            
