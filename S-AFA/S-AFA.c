@@ -46,13 +46,15 @@ int main()
 	Exec = queue_create();
 	Block = queue_create();
 	Exit = queue_create();
-
+	ListaDTB = list_create();
 	//servidor
 	socketEscucha= levantarServidorIPautomatica(configuracion->puerto, BACKLOG); //BACKLOG es la cantidad de clientes que pueden conectarse a este servidor
 	MatrizDeConexiones[0][0] = socketEscucha;
 	//socketActivo = aceptarComunicaciones(socketEscucha);
 	free(configuracion);
+
 	crearHilo(&hiloConexionesEntrantes,(void*) aceptarComunicacionesParaHilo, (void*)socketEscucha, "Planificador");
+
 	printf("Estado: Corrupto");
 		/*
 		 En dicho estado no podrá aceptar el ingreso de ningún run para un programa G.DT. Para que salga de dicho estado deberán pasar dos cosas:
@@ -60,7 +62,18 @@ int main()
 		 *La conexión de por lo menos un Proceso CPU.
 		 */
 	while((MatrizDeConexiones[0][1] * MatrizDeConexiones[0][2]) == 0);
+
 	printf("Estado: Operativo");
+
+	crearHilo(&hiloPLP,(void*)planificacionLP, NULL, "Planificador");
+	//pthread_create(&hiloPLP, NULL, (void*)planificacionLP, NULL);
+	crearHilo(&hiloPCP,(void*)planificacionCP, NULL, "Planificador");
+	//pthread_create(&hiloPCP, NULL, (void*)planificacionLP, NULL);
+
+	pthread_join(hiloConexionesEntrantes, NULL);
+	pthread_join(hiloPLP, NULL);
+	pthread_join(hiloPCP, NULL);
+
 	/*
 	pthread_create(&hiloPlanificacion, NULL, (void*)planificar, NULL);
 	pthread_create(&hiloConsola, NULL, (void*)iniciar_consola, NULL);

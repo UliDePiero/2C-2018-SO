@@ -10,7 +10,8 @@
 4. metricas
 */
 #include "S-AFA.h"
-/*main(){
+
+consola(){
 	do{
 
 				printf("\n\n1:Ejecutar\n2:Status\n3:Finalizar\n4:Metricas\n5:Salir\n");
@@ -18,6 +19,13 @@
 
 				switch(operacion){
 				                    case 1:
+				                    	scanf("%s", &rutaScript);
+				                    	pthread_mutex_lock(&mutexEjecutar);
+				                    	nuevoIngresoGDT=1;
+				                    	pthread_mutex_unlock(&mutexEjecutar);
+				                    	sem_wait(semEjecutar);
+				                    	DTB_Ready->Script = fopen(rutaScript, "r");
+				                    	enviarMensaje(socketActivo/*ver como seleccionar el CPU*/, NOMBRE /*DTBDUMMY*/, sizeof(DTB_Ready->ID), DTB_Ready->ID);
 				                    	break;
 				                    case 2:
 				                    	break;
@@ -28,8 +36,8 @@
 				                    default:
 				                    	break;
 				}
-	}while (operacion != 8);
-}*/
+	}while (operacion != 5);
+}
 /*
 void iniciar_consola(){
 	bool comando_valido;

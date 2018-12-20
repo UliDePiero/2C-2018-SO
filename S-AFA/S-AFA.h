@@ -30,13 +30,18 @@ int socketEscucha;
 int	socketActivo;
 pthread_t hiloConexionesEntrantes;
 pthread_t hiloPlanificacion;
+pthread_t hiloPLP;
+pthread_t hiloPCP;
 pthread_t hiloConsola;
+pthread_mutex_t mutexEjecutar;
+sem_t semEjecutar;
 //Colas de procesos
 t_queue *New;
 t_queue *Ready;
 t_queue *Exec;
 t_queue *Block;
 t_queue *Exit;
+t_list *ListaDTB;
 int* primeroNew;
 int* primeroReady;
 int* primeroExec;
@@ -44,6 +49,11 @@ int* primeroBlock;
 int* primeroExit;
 int* nuevoCliente; //Puntero al nuevo Cliente entrante
 int idCLI; //ID del nuevo Cliente entrante
+int operacion;
+char rutaScript[100];
+int nuevoIngresoGDT = 0;
+int procesosEnReady = 0;
+int ID_DTBs = 0;
 ///---------------------ESTRUCTURA DE CONFIGURACION DE S-AFA-------------------------
 
 //Estructura para datos del archivo de configuracion
@@ -64,5 +74,24 @@ RETARDO_PLANIF=600
 */
 //Estructura para guardar la configuracion del proceso
 ConfiguracionSAFA* configuracion;
+
+//MOVER A PROTOCOLO.h
+typedef struct {
+	int ID;
+	FILE* Script;
+	char RutaScript[100];
+	char PC[20];
+	char TablaArchivosAbiertos[10];
+	int FlagIncializado;
+} EstructuraDTB;
+EstructuraDTB* DTB;
+EstructuraDTB* DTB_Ready;
+/*
+El ID de G.DT
+El Escriptorio a abrir
+El Program Counter (PC)
+Flag G.DT inicializado
+Tabla de direcciones de archivos abiertos
+*/
 
 #endif /* S_AFA_H_ */
