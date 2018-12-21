@@ -25,7 +25,7 @@ void cargarNuevoDTB(EstructuraDTB* DTB) {
 	DTB->FlagIncializado = 1;
 }
 void planificacionLP(){
-
+while(1){
 	if(nuevoIngresoGDT == 1){
 		pthread_mutex_lock(&mutexEjecutar);
 		nuevoIngresoGDT = 0;
@@ -45,6 +45,5 @@ void planificacionLP(){
 		sem_post(&semEjecutar);
 	}
 
-
-
+}
 }

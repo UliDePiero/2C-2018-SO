@@ -31,16 +31,16 @@ void iniciarDTBDummy(){
 }
 void planificacionCP(){
 
-	int *ID, q=1, flagCPUencontrada;
-
+	int *ID, q, flagCPUencontrada, cantCPUs;
+while(1){
 	//ALGORITMO
 	ID = queue_pop(Ready);
 	DTB = list_find(ListaDTB, (void*)(DTB->ID == *ID));
 	moverDTB(Exec, *ID);
 
-	flagCPUencontrada = 0;
+	q = 1; flagCPUencontrada = 0;
 
-	//while(flagCPUencontrada==0){
+	while(flagCPUencontrada==0){
 		while ( (q<20) && ( (socketCPUSAFA[q][0] == 0) || ((socketCPUSAFA[q][0] != 0) && (socketCPUSAFA[q][1] != 0)) ) ) q++; //busca CPU disponible
 		if (q<20){
 			socketCPUdisponible = socketCPUSAFA[q][0];
@@ -52,20 +52,28 @@ void planificacionCP(){
 			enviarMensaje(socketCPUdisponible, SCRIPT , sizeof(DTB->RutaScript), &DTB->RutaScript); //el tamaño no se si esta bien
 		}
 		else {
+			cantCPUs = MatrizDeConexiones[0][2];
 			printf("No hay CPU disponible.");
+			while(cantCPUs == MatrizDeConexiones[0][2]);
 			//sem_wait(&semLiberoCPU);
 		}
-	//}
+	}
 	t_prot_mensaje* respuestaCPU_DTBID = RecibirMensaje(socketCPUdisponible);
 	t_prot_mensaje* respuestaCPU_FLAG = RecibirMensaje(socketCPUdisponible);
-	if(respuestaCPU_FLAG->payload == 0){
-
+	socketCPUSAFA[q][1] = 0;
+	switch(respuestaCPU_FLAG->payload == 0){
+		case 0:
+			ID = queue_pop(Exec);
+			moverDTB(Block, *ID);
+			break;
+		case 1:
+			ID = queue_pop(Exec);
+			moverDTB(Ready, *ID);
+			break;
+		case 2:
+			ID = queue_pop(Exec);
+			moverDTB(Exit, *ID);
+			break;
 	}
-
-	moverDTB(Block, *ID);
-	moverDTB(Ready, *ID);
-	moverDTB(Exec, *ID);
-
-	moverDTB(Exit, *ID);
-
+}
 }
