@@ -4,7 +4,7 @@
  *  Created on: 31 ago. 2018
  *      Author: utnso
  */
-/*#include "CPU.h"
+#include "CPU.h"
 
 void configurar(ConfiguracionCPU* configuracion) {
 
@@ -26,7 +26,7 @@ void configurar(ConfiguracionCPU* configuracion) {
 	strcpy(configuracion->ip_diego, archivoConfigSacarStringDe(archivoConfig, "IP_DAM"));
 
 	archivoConfigDestruir(archivoConfig);
-}*/
+}
 
 
 #include <stdio.h>
@@ -92,7 +92,7 @@ void ejecutarAsignar(char * instruccion){
 	//enviarDatosFM9();
 }
 
-void ejecutarAbrir(char * instruccion){
+void ejecutarAbrir(char * instruccion, int socketDAM){
 	char path[100];
 	bzero((char *)&path, sizeof(path));
 	//path = (char*)malloc(100 * sizeof(char));
@@ -100,7 +100,9 @@ void ejecutarAbrir(char * instruccion){
 	//printf("Path: %s \n", path);
 
 	//verificarArchivoAbierto();
-	//if(not open) -----> solicitarArchivoAlDiego();
+
+	//if(not open)
+	enviarMensaje(socketDAM, ABRIR_PATH, sizeof(char) * strlen(path), path);
 }
 
 void ejecutarWait(char * instruccion){
@@ -202,7 +204,7 @@ int parser(char * instruccion){
 	return 11;
 }
 
-int ejecutarInstruccion(char * instruccion){
+int ejecutarInstruccion(char * instruccion, int socketDAM){
 	int opcion = 0;
 	opcion = parser (instruccion);
 	switch(opcion){
@@ -243,7 +245,7 @@ int ejecutarInstruccion(char * instruccion){
 int buscarIndiceDTBID(int id, EstructuraDTB * DTB, cont){
 	for(int i=0; i<=cont; i++){
 		if(DTB[i]->ID == id)
-			return id;
+			return i;
 	}
 	return -1;
 }
@@ -272,7 +274,7 @@ int main()
 		quantum = mensaje->payload;
 
 	int opcion, cont = 0, indice;
-	char * script, * instruccion;
+	char * instruccion;
 
 	while(1){
 
@@ -283,20 +285,22 @@ int main()
 			if (indice == -1){
 				indice = cont;
 				DTB[indice]->ID = mensaje->payload;
+				mensaje = RecibirMensaje(socketSAFA);
 				if(mensaje->head == FLAG)
 					DTB[indice]->FlagInicializado = mensaje->payload;
+				mensaje = RecibirMensaje(socketSAFA);
 				if(mensaje->head == SCRIPT)
-					strcpy(script, mensaje->payload);
+					strcpy(DTB->Script, mensaje->payload);
 				cont++;
 			}
 
 			if (DTB[indice]->FlagInicializado == 1){
 				if(DTB[indice]->Script == NULL)
-					DTB[indice]->Script = fopen(script, "r");//Ver bien lo de la ruta
+					DTB[indice]->Script = fopen(DTB->RutaScript, "r");//Ver bien lo de la ruta
 
 				for(int i=0; i<quantum; i++){
 					fgets(instruccion, 200, (FILE*) DTB[indice]->Script);
-					opcion = ejecutarInstruccion(instruccion);
+					opcion = ejecutarInstruccion(instruccion, socketDAM);
 					if (opcion == 11){//Si ejecutarInstruccion() devuelve 11 significa EOF
 						fclose(DTB[indice]->Script);
 						break;
@@ -305,9 +309,10 @@ int main()
 						i--;
 				}
 			}else{
-				enviarMensaje(socketDAM, DUMMY, strlen(script) * sizeof(char), script);
-				enviarMensaje(socketSAFA, DUMMY_DTBID, sizeof(int), DTB->ID);
-				enviarMensaje(socketSAFA, DUMMY_FLAG, sizeof(int), DTB->FlagInicializado);
+				enviarMensaje(socketDAM, DTBID, sizeof(int), DTB[indice]->ID);
+				enviarMensaje(socketDAM, SCRIPT, strlen(DTB->RutaScript) * sizeof(char), DTB->RutaScript);
+				enviarMensaje(socketSAFA, DUMMY_DTBID, sizeof(int), DTB[indice]->ID);
+				enviarMensaje(socketSAFA, DUMMY_FLAG, sizeof(int), DTB[indice]->FlagInicializado);
 			}
 		}else
 			printf("Primero se debe recibir el DTBID");//No se si hace falta
@@ -321,9 +326,9 @@ int main()
 	conversacionComoCliente((void*) socketSAFA);
 	conversacionComoCliente((void*) socketDAM);
 	*/
-	/*cerrarSocket(socketSAFA);
+	cerrarSocket(socketSAFA);
 	cerrarSocket(socketDAM);
-	free(configuracion);*/
+	free(configuracion);
 
 	//int opcion;
 	//char instruccion[200];
