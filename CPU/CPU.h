@@ -5,6 +5,12 @@
  *      Author: utnso
  */
 
+
+//Actualizar ENUM con SCRIPT, QUANTUM, FLAG, DTBID, DUMMY_DTBID, DUMMY_FLAG
+
+
+
+
 #ifndef CPU_H_
 #define CPU_H_
 //Ruta del archivo de configuraciones
