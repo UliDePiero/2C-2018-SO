@@ -303,11 +303,14 @@ int main()
 					opcion = ejecutarInstruccion(instruccion, socketDAM);
 					if (opcion == 11){//Si ejecutarInstruccion() devuelve 11 significa EOF
 						fclose(DTB[indice]->Script);
+						enviarMensaje(socketSAFA, FLAG, sizeof(int), 2);
 						break;
 					}
 					if (opcion == 10)
 						i--;
 				}
+				enviarMensaje(socketSAFA, DTBID, sizeof(int), DTB[indice]->ID);
+				enviarMensaje(socketSAFA, FLAG, sizeof(int), 1);
 			}else{
 				enviarMensaje(socketDAM, DTBID, sizeof(int), DTB[indice]->ID);
 				enviarMensaje(socketDAM, SCRIPT, strlen(DTB->RutaScript) * sizeof(char), DTB->RutaScript);
