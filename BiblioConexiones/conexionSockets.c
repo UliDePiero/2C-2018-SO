@@ -346,16 +346,40 @@ void aceptarComunicacionesParaHilo(int socketEscucha) {
 				if(MatrizDeConexiones[i][0] == socketEscucha)
 				{
 					MatrizDeConexiones[i][1]=1;
+					switch(i){
+						case 0:
+								socketDiegoSAFA = socketActivo;
+								break;
+						case 1:
+								socketDiegoFM9 = socketActivo;
+								break;
+						case 2:
+								socketDiegoMDJ = socketActivo;
+								break;
+					}
 					printf("Se conecto el Diego. \n");
 				}
 			}
 		}else if (cliente == CPU){
 			mensaje = RecibirMensaje(socketActivo);
 			char* nombre = LeerMensaje(mensaje);
-			for(int i=0; i<2; i++){
+			for(int i=0; i<4; i++){
 				if(MatrizDeConexiones[i][0] == socketEscucha)
 				{
 					MatrizDeConexiones[i][2]++;
+					switch(i){
+						case 0:
+								socketCPUSAFA[MatrizDeConexiones[i][2]][0] = socketActivo;
+								break;
+						case 1:
+								socketCPUFM9[MatrizDeConexiones[i][2]] = socketActivo;
+								break;
+						case 3:
+								socketCPUDIEGO[MatrizDeConexiones[i][2]] = socketActivo;
+								break;
+						default:
+								break;
+					}
 					printf("Nuevo CPU: <%s>\n", nombre);
 				}
 			}

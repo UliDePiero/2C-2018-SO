@@ -68,7 +68,7 @@ int main()
 	crearHilo(&hiloPLP,(void*)planificacionLP, NULL, "Planificador");
 	//pthread_create(&hiloPLP, NULL, (void*)planificacionLP, NULL);
 	crearHilo(&hiloPCP,(void*)planificacionCP, NULL, "Planificador");
-	//pthread_create(&hiloPCP, NULL, (void*)planificacionLP, NULL);
+	//pthread_create(&hiloPCP, NULL, (void*)planificacionCP, NULL);
 
 	pthread_join(hiloConexionesEntrantes, NULL);
 	pthread_join(hiloPLP, NULL);

@@ -23,7 +23,9 @@ typedef struct{
 }t_comando;
 
 char* entrada;
-
+int operacion;
+char rutaScript[100];
+int nuevoIngresoGDT;
 /**Declaraciones**/
 void iniciar_consola();
 t_comando* parsear_entrada(char* entrada);

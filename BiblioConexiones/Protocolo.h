@@ -83,7 +83,12 @@ typedef enum{
 
 	/*Para dump*/
 	DUMP_INICIADO,
-	DUMP_TERMINADO
+	DUMP_TERMINADO,
+	DTBID,
+	DUMMY_DTBID,
+	FLAG,
+	DUMMY_FLAG,
+	SCRIPT
 }t_header;
 
 typedef struct{
@@ -100,8 +105,12 @@ typedef enum{
 /* Posiciones [0][0] Proceso SAFA [0][1] Diego [0][2] Cantidad CPUs
  * Posiciones [1][0] Proceso FM9  [1][1] Diego [1][2] Cantidad CPUs
  * Posiciones [2][0] Proceso MDJ  [2][1] Diego
+ * Posiciones [3][0] Proceso DIEGO			   [3][2] Cantidad CPUs
  */
-int MatrizDeConexiones[3][3] = {0};
+int MatrizDeConexiones[4][3];
+int socketDiegoSAFA, socketDiegoFM9, socketDiegoMDJ;
+int socketCPUSAFA[20][2], socketCPUFM9[20], socketCPUDIEGO[20];
+int socketCPUdisponible;
 t_prot_mensaje* RecibirMensaje(int socket_origen);
 t_prot_mensaje* ErrorRecibirMensaje();
 t_prot_mensaje* DesconexionRecibirMensaje();

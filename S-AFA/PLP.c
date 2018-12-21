@@ -12,7 +12,9 @@ planificando los pases a READY según el algoritmo FIFO (First In, First Out). E
 la carga en memoria del script Escriptorio asociado, responsabilidad del Gestor de programas G.DT descrito más adelante.
  *
  */
-//#include "S-AFA.h"
+#include "S-AFA.h"
+#include "Consola.h"
+
 void cargarNuevoDTB(EstructuraDTB* DTB) {
 	DTB->ID = ID_DTBs++;
 	strcpy(DTB->RutaScript,rutaScript );
@@ -20,7 +22,7 @@ void cargarNuevoDTB(EstructuraDTB* DTB) {
 	strcpy(DTB->PC,"\0" );
 	strcpy(DTB->TablaArchivosAbiertos,"\0" );
 	*/
-	DTB->FlagIncializado = 0;
+	DTB->FlagIncializado = 1;
 }
 void planificacionLP(){
 
@@ -31,14 +33,15 @@ void planificacionLP(){
 		//free(DTB);
 		list_add(ListaDTB, DTB);
 		cargarNuevoDTB(DTB);
-		queue_push(New, DTB->ID);
+		queue_push(New, &DTB->ID);
 		pthread_mutex_unlock(&mutexEjecutar);
 	}
 	if(procesosEnReady < configuracion->multiprogramacion){
-		int ID = queue_pop(New);
-		DTB_Ready = list_find(ListaDTB, DTB->ID = ID);
-		queue_push(Ready, DTB_Ready->ID);
-		procesosEnReady++;
+		int *ID;
+		ID = queue_pop(New);
+		DTB_Ready = list_find(ListaDTB, (void*)(DTB->ID == *ID));
+		//queue_push(Ready, &DTB_Ready->ID);
+		//sprocesosEnReady++;
 		sem_post(&semEjecutar);
 	}
 

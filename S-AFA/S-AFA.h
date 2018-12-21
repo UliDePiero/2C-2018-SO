@@ -35,6 +35,9 @@ pthread_t hiloPCP;
 pthread_t hiloConsola;
 pthread_mutex_t mutexEjecutar;
 sem_t semEjecutar;
+sem_t semDTBDUMMY;
+sem_t semCPUdisponible;
+sem_t semLiberoCPU;
 //Colas de procesos
 t_queue *New;
 t_queue *Ready;
@@ -49,11 +52,10 @@ int* primeroBlock;
 int* primeroExit;
 int* nuevoCliente; //Puntero al nuevo Cliente entrante
 int idCLI; //ID del nuevo Cliente entrante
-int operacion;
-char rutaScript[100];
-int nuevoIngresoGDT = 0;
-int procesosEnReady = 0;
-int ID_DTBs = 0;
+
+
+int procesosEnReady;
+int ID_DTBs;
 ///---------------------ESTRUCTURA DE CONFIGURACION DE S-AFA-------------------------
 
 //Estructura para datos del archivo de configuracion
@@ -86,6 +88,7 @@ typedef struct {
 } EstructuraDTB;
 EstructuraDTB* DTB;
 EstructuraDTB* DTB_Ready;
+EstructuraDTB* DTB_Dummy;
 /*
 El ID de G.DT
 El Escriptorio a abrir
@@ -93,5 +96,8 @@ El Program Counter (PC)
 Flag G.DT inicializado
 Tabla de direcciones de archivos abiertos
 */
+
+void planificacionLP();
+void planificacionCP();
 
 #endif /* S_AFA_H_ */

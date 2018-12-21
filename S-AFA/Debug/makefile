@@ -25,7 +25,7 @@ endif
 all: S-AFA
 
 dependents:
-	-cd /home/utnso/workspace/tp-2018-2c-Intel-y-Gentes/BiblioConexiones/Debug && $(MAKE) clean all
+	-cd /home/utnso/workspace/tp-2018-2c-Intel-y-Gentes/BiblioConexiones/Debug && $(MAKE) all
 
 # Tool invocations
 S-AFA: $(OBJS) $(USER_OBJS) /home/utnso/workspace/tp-2018-2c-Intel-y-Gentes/BiblioConexiones/Debug/libBiblioConexiones.so
